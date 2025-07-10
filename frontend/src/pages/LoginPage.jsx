@@ -2,6 +2,9 @@ import React, { useState, useEffect } from "react";
 import { Mail, Shield, Clock, CheckCircle, AlertCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
+import { useAuth } from "./AuthContext";
+
+
 export default function LoginPage() {
   const [currentStep, setCurrentStep] = useState("email"); // 'email' or 'otp'
   const [email, setEmail] = useState("");
@@ -13,6 +16,9 @@ export default function LoginPage() {
   const [resendCount, setResendCount] = useState(0);
 
   const navigate=useNavigate();
+
+  const { setIsAuthenticated } = useAuth();
+
 
   // Timer for OTP resend
   useEffect(() => {
@@ -81,6 +87,7 @@ export default function LoginPage() {
       if (!res.ok) throw new Error(data.error || "OTP verification failed");
 
       alert("✅ Login successful!");
+      setIsAuthenticated(true);
       navigate("/userform");
       setCurrentStep("email");
       setEmail("");
@@ -149,7 +156,7 @@ export default function LoginPage() {
             <Shield className="w-8 h-8 text-white" />
           </div>
           <h1 className="text-3xl font-bold text-slate-900 mb-2">
-            Welcome Back
+            Welcome
           </h1>
           <p className="text-slate-600">
             {currentStep === "email"
