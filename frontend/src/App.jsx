@@ -5,6 +5,7 @@ import './App.css'
 import Home from "./pages/Home"
 // import SignIn from './pages/SignIn'
 import LoginPage from './pages/LoginPage'
+import UserForm from './pages/UserForm'
 function App() {
   const [count, setCount] = useState(0)
 
@@ -13,6 +14,7 @@ function App() {
       <Routes>
         <Route path='/signin' element={<LoginPage/>}></Route>
         <Route path='/' element={<Home/>}></Route>
+        <Route path='/userform' element={<UserForm/>}></Route>
       </Routes>
     </>
   )

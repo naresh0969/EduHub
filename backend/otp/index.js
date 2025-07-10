@@ -11,14 +11,14 @@ app.use(express.json());
 let otpStore = {}; // { email: otp }
 
 app.post("/send-otp", async (req, res) => {
-  const { email } = req.body;
+  const { email } = req.body;                                                      //
 
   if (!email.endsWith("@rgukt.ac.in")) {
     return res.status(400).json({ error: "Only @rgukt.ac.in emails allowed" });
   }
 
   const otp = Math.floor(100000 + Math.random() * 900000).toString();
-  otpStore[email] = otp;
+  otpStore[email] = otp;                                                         //
 
   try {
     const transporter = nodemailer.createTransport({

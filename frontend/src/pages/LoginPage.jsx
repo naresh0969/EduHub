@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Mail, Shield, Clock, CheckCircle, AlertCircle } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 export default function LoginPage() {
   const [currentStep, setCurrentStep] = useState("email"); // 'email' or 'otp'
@@ -10,6 +11,8 @@ export default function LoginPage() {
   const [otpTimer, setOtpTimer] = useState(0);
   const [generatedOtp, setGeneratedOtp] = useState("");
   const [resendCount, setResendCount] = useState(0);
+
+  const navigate=useNavigate();
 
   // Timer for OTP resend
   useEffect(() => {
@@ -26,34 +29,6 @@ export default function LoginPage() {
   const generateOtp = () => {
     return Math.floor(100000 + Math.random() * 900000).toString();
   };
-
-  // Simulate email OTP sending
-  // const handleEmailSubmit = async () => {
-  //   if (!email || !email.includes("@")) {
-  //     setError("Please enter a valid email address");
-  //     return;
-  //   }
-
-  //   setLoading(true);
-  //   setError("");
-
-  //   // Simulate API call delay
-  //   await new Promise((resolve) => setTimeout(resolve, 2000));
-
-  //   const newOtp = generateOtp();
-  //   setGeneratedOtp(newOtp);
-  //   setLoading(false);
-  //   setCurrentStep("otp");
-  //   setOtpTimer(60); // 60 seconds timer
-
-  //   // Show the generated OTP in console for testing
-  //   console.log("Generated OTP:", newOtp);
-
-  //   // Simulate email notification
-  //   setTimeout(() => {
-  //     alert(`OTP sent to ${email}\nFor demo: ${newOtp}`);
-  //   }, 500);
-  // };
 
   const handleEmailSubmit = async () => {
     if (!email.endsWith("@rgukt.ac.in")) {
@@ -84,32 +59,7 @@ export default function LoginPage() {
     setLoading(false);
   };
 
-  // Simulate OTP verification
-  // const handleOtpSubmit = async () => {
-  //   if (!otp || otp.length !== 6) {
-  //     setError("Please enter a valid 6-digit OTP");
-  //     return;
-  //   }
-
-  //   setLoading(true);
-  //   setError("");
-
-  //   // Simulate API verification delay
-  //   await new Promise((resolve) => setTimeout(resolve, 1500));
-
-  //   if (otp === generatedOtp) {
-  //     setLoading(false);
-  //     alert("✅ Login successful! Welcome to your dashboard.");
-  //     // Reset form
-  //     setCurrentStep("email");
-  //     setEmail("");
-  //     setOtp("");
-  //     setGeneratedOtp("");
-  //   } else {
-  //     setLoading(false);
-  //     setError("Invalid OTP. Please check your email and try again.");
-  //   }
-  // };
+ 
 
   const handleOtpSubmit = async () => {
     if (otp.length !== 6) {
@@ -131,9 +81,11 @@ export default function LoginPage() {
       if (!res.ok) throw new Error(data.error || "OTP verification failed");
 
       alert("✅ Login successful!");
+      navigate("/userform");
       setCurrentStep("email");
       setEmail("");
       setOtp("");
+
     } catch (err) {
       setError(err.message);
     }
