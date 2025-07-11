@@ -1,8 +1,15 @@
 const express = require("express");
 const nodemailer = require("nodemailer");
 const cors = require("cors");
+const mongoose = require('mongoose');
+
 const dotenv = require("dotenv");
 dotenv.config();
+
+const User=require('../otp/models/Users');
+
+
+
 
 const app = express();
 app.use(cors());
@@ -53,6 +60,28 @@ app.post("/verify-otp", (req, res) => {
     return res.status(400).json({ error: "Invalid OTP" });
   }
 });
+
+
+
+//Connect to MongoDB
+mongoose.connect(process.env.MONGO_URI,{})
+.then(()=>console.log('MongoDB is Connected'))
+.catch(err=>console.error(err));
+
+app.post('/api/users', async (req, res) => {
+  try {
+    const newUser = new User(req.body);
+    await newUser.save();
+    res.status(201).json({ message: 'User registered successfully' });
+  } catch (err) {
+    if (err.code === 11000) {
+      res.status(400).json({ error: 'Username already exists' });
+    } else {
+      res.status(500).json({ error: 'Something went wrong' });
+    }
+  }
+});
+
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
