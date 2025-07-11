@@ -1,26 +1,3 @@
-// import React from 'react'
-// import { useAuth } from "./AuthContext";
-
-
-// function UserForm() {
-//   const { setIsAuthenticated } = useAuth();
-
-//   return (
-//     <div>
-//       <h1>hello</h1>
-//       <button onClick={() => setIsAuthenticated(false)}>Logout</button>
-
-//     </div>
-//   )
-// }
-
-// export default UserForm
-
-
-
-
-
-
 import React, { useState } from 'react';
 
 export default function UserForm() {
@@ -47,12 +24,31 @@ export default function UserForm() {
     }));
   };
 
-  const handleSubmit = () => {
-    if (isFormValid) {
-      console.log('Form Data:', formData);
-      // Add your form submission logic here
+const handleSubmit = async () => {
+  if (isFormValid) {
+    try {
+      const res = await fetch('http://localhost:5000/api/users', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        alert('User registered successfully!');
+        setFormData({ name: '', branch: '', username: '' });
+      } else {
+        alert(data.error || 'Registration failed.');
+      }
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      alert('Something went wrong.');
     }
-  };
+  }
+};
 
   const isFormValid = formData.name && formData.branch && formData.username;
 
@@ -137,14 +133,14 @@ export default function UserForm() {
           </div>
 
           {/* Form Data Display (for testing) */}
-          {(formData.name || formData.branch || formData.username) && (
+          {/* {(formData.name || formData.branch || formData.username) && (
             <div className="mt-6 p-4 bg-gray-50 rounded-lg">
               <h3 className="text-sm font-medium text-gray-700 mb-2">Form Data:</h3>
               <pre className="text-xs text-gray-600">
                 {JSON.stringify(formData, null, 2)}
               </pre>
             </div>
-          )}
+          )} */}
         </div>
       </div>
     </div>
