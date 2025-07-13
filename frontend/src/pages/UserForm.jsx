@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState ,useEffect} from 'react';
+import { useAuth } from "./AuthContext";
 
 export default function UserForm() {
+
   const [formData, setFormData] = useState({
     name: '',
     branch: '',
@@ -131,16 +133,6 @@ const handleSubmit = async () => {
               Next
             </button>
           </div>
-
-          {/* Form Data Display (for testing) */}
-          {/* {(formData.name || formData.branch || formData.username) && (
-            <div className="mt-6 p-4 bg-gray-50 rounded-lg">
-              <h3 className="text-sm font-medium text-gray-700 mb-2">Form Data:</h3>
-              <pre className="text-xs text-gray-600">
-                {JSON.stringify(formData, null, 2)}
-              </pre>
-            </div>
-          )} */}
         </div>
       </div>
     </div>

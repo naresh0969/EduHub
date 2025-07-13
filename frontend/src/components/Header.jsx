@@ -1,10 +1,14 @@
 import React, { useState } from "react";
-import { Search, Menu, User, X } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Search, Menu, User, X, LogOut } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../pages/AuthContext";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+
+  const { isAuthenticated, setIsAuthenticated } = useAuth();
+  const navigate = useNavigate();
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -18,6 +22,12 @@ export default function Header() {
     if (e.key === "Enter") {
       handleSearch();
     }
+  };
+
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    localStorage.removeItem("isAuthenticated");
+    navigate("/signin");
   };
 
   return (
@@ -59,15 +69,17 @@ export default function Header() {
               </div>
             </div>
 
-            {/* Right: Sign In */}
+            {/* Right: Sign In (shown only if not authenticated) */}
             <div className="flex items-center">
-              <Link
-                to="/signin"
-                className="inline-flex items-center px-2 py-2 sm:px-4 sm:py-2 border border-transparent text-xs sm:text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
-              >
-                <User className="h-4 w-4 sm:mr-2" />
-                <span className="hidden sm:inline">Sign In</span>
-              </Link>
+              {!isAuthenticated && (
+                <Link
+                  to="/signin"
+                  className="inline-flex items-center px-2 py-2 sm:px-4 sm:py-2 border border-transparent text-xs sm:text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
+                >
+                  <User className="h-4 w-4 sm:mr-2" />
+                  <span className="hidden sm:inline">Sign In</span>
+                </Link>
+              )}
             </div>
           </div>
         </div>
@@ -105,12 +117,22 @@ export default function Header() {
               <Link to="/services" className="block text-gray-700 hover:text-blue-600 transition">Services</Link>
               <Link to="/about" className="block text-gray-700 hover:text-blue-600 transition">About</Link>
               <Link to="/contact" className="block text-gray-700 hover:text-blue-600 transition">Contact</Link>
+
+              {/* Logout Button - only if authenticated */}
+              {isAuthenticated && (
+                <button
+                  onClick={handleLogout}
+                  className="text-red-600 hover:text-red-800 transition font-semibold flex items-center gap-2"
+                  aria-label="Logout"
+                >
+                  <LogOut className="w-4 h-4" />
+                  Logout
+                </button>
+              )}
             </nav>
           </div>
         </div>
       </header>
-
-      {/* Hero Section */}
     </div>
   );
 }
